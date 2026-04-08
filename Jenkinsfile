@@ -1,6 +1,12 @@
 pipeline {
     agent any
     
+    environment {
+        JAVA_HOME = 'C:\\Java'
+        MAVEN_HOME = 'C:\\Maven'
+        PATH = "${MAVEN_HOME}\\bin;${JAVA_HOME}\\bin;${PATH}"
+    }
+    
     stages {
         stage('Checkout') {
             steps {
@@ -11,14 +17,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building project...'
-                bat 'mvn clean install'
+                bat 'C:\\Maven\\bin\\mvn clean install'
             }
         }
         
         stage('Run Selenium Tests') {
             steps {
                 echo 'Running Selenium tests...'
-                bat 'mvn test'
+                bat 'C:\\Maven\\bin\\mvn test'
             }
         }
         
