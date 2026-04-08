@@ -20,15 +20,15 @@ public class LoginTests {
 
     @Test
     public void testValidLogin() {
-       //Simulate valid login steps here; this should include entering username and password and clicking login
-       //Example:
+       // Simulate valid login steps here; this should include entering username and password and clicking login
+       // Example:
        WebElement usernameField = driver.findElement(By.id("username"));
        usernameField.sendKeys("validUser");
        WebElement passwordField = driver.findElement(By.id("password"));
        passwordField.sendKeys("validPassword");
        driver.findElement(By.id("loginButton")).click();
 
-       Assert that login was successful
+       // Assert that login was successful
        String expectedTitle = "Dashboard";
        String actualTitle = driver.getTitle();
        Assert.assertEquals(actualTitle, expectedTitle);
@@ -44,7 +44,7 @@ public class LoginTests {
        passwordField.sendKeys("invalidPassword");
        driver.findElement(By.id("loginButton")).click();
 
-       Assert that error message is displayed
+       // Assert that error message is displayed
        WebElement errorMessage = driver.findElement(By.id("errorMessage"));
        Assert.assertTrue(errorMessage.isDisplayed());
     }
