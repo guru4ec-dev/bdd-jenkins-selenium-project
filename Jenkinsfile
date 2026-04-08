@@ -1,35 +1,44 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
+        
         stage('Build') {
             steps {
-                // Commands to build your project go here
-                sh 'mvn clean compile' // Assuming you're using Maven
+                echo 'Building project...'
+                bat 'mvn clean install'
             }
         }
+        
         stage('Run Selenium Tests') {
             steps {
-                // Commands to run your Selenium tests go here
-                sh 'mvn test' // Assuming your tests are run with Maven
+                echo 'Running Selenium tests...'
+                bat 'mvn test'
             }
         }
+        
         stage('Publish Results') {
             steps {
-                // Commands to publish test results go here
-                junit '**/target/surefire-reports/*.xml' // Assuming you're using JUnit
+                junit 'target/surefire-reports/*.xml'
             }
         }
     }
+    
     post {
         always {
-            // Actions that should occur after the pipeline runs, e.g., cleanup or notifications
             echo 'Cleaning up...'
+            archiveArtifacts artifacts: 'target/**', allowEmptyArchive: true
+        }
+        failure {
+            echo 'Tests failed!'
+        }
+        success {
+            echo 'Tests passed successfully!'
         }
     }
 }
