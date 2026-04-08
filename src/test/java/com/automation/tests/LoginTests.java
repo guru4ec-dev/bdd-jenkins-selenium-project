@@ -1,5 +1,19 @@
 package com.automation.tests;
 
+// Selenium imports
+
+import org.openqa.selenium.chrome.ChromeOptions;
+
+// TestNG imports
+import org.testng.annotations.*;
+
+// Java utility imports
+import java.util.List;
+
+// Network imports (for link validation)
+import java.net.URL;
+import java.net.HttpURLConnection;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import io.github.bonigarcia.wdm.WebDriverManager;
