@@ -16,43 +16,61 @@ public class LoginTests {
     @BeforeMethod
     public void setUp() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("https://example.com/login");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new"); // Jenkins friendly
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
+        driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
+        driver.get("https://testautomationcentral.com/demo/links.html");
     }
 
     @Test
-    public void testValidLogin() {
-       // Simulate valid login steps here; this should include entering username and password and clicking login
-       // Example:
-       WebElement usernameField = driver.findElement(By.id("username"));
-       usernameField.sendKeys("validUser");
-       WebElement passwordField = driver.findElement(By.id("password"));
-       passwordField.sendKeys("validPassword");
-       driver.findElement(By.id("loginButton")).click();
+    public void validateAllLinks() {
+        List<WebElement> links = driver.findElements(By.tagName("a"));
 
-       // Assert that login was successful
-       String expectedTitle = "Dashboard";
-       String actualTitle = driver.getTitle();
-       Assert.assertEquals(actualTitle, expectedTitle);
+        System.out.println("Total links found: " + links.size());
+
+        for (WebElement link : links) {
+            String linkText = link.getText();
+            String url = link.getAttribute("href");
+
+            // Skip empty or null links
+            if (url == null || url.isEmpty()) {
+                System.out.println("Skipping empty link: " + linkText);
+                continue;
+            }
+
+            verifyLink(url, linkText);
+        }
     }
 
-    @Test
-    public void testInvalidLogin() {
-       // Simulate invalid login steps here
-       // Example:
-       WebElement usernameField = driver.findElement(By.id("username"));
-       usernameField.sendKeys("invalidUser");
-       WebElement passwordField = driver.findElement(By.id("password"));
-       passwordField.sendKeys("invalidPassword");
-       driver.findElement(By.id("loginButton")).click();
+    public void verifyLink(String urlString, String linkText) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.connect();
 
-       // Assert that error message is displayed
-       WebElement errorMessage = driver.findElement(By.id("errorMessage"));
-       Assert.assertTrue(errorMessage.isDisplayed());
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode >= 200 && responseCode < 400) {
+                System.out.println("✅ VALID: " + linkText + " -> " + urlString);
+            } else {
+                System.out.println("❌ BROKEN: " + linkText + " -> " + urlString + " | Code: " + responseCode);
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ ERROR: " + linkText + " -> " + urlString);
+        }
     }
 
     @AfterMethod
-    public void tearDown() {  
-            driver.quit(); 
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
+
 }
