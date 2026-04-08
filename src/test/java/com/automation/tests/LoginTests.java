@@ -11,12 +11,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class LoginTests {
-    private WebDriver driver;
+    WebDriver driver;
 
     @BeforeMethod
     public void setUp() {
         WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
         driver.get("https://example.com/login");
     }
 
@@ -52,9 +52,7 @@ public class LoginTests {
     }
 
     @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    public void tearDown() {  
+            driver.quit(); 
     }
 }
