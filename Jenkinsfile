@@ -8,6 +8,7 @@ pipeline {
     }
     
     stages {
+
         stage('Setup Environment') {
             steps {
                 echo 'Setting up Java and Maven...'
@@ -50,11 +51,13 @@ pipeline {
         }
         
         stage('Publish TestNG Results') {
-    steps {
-        publishTestNGResults testResultsPattern: '**/target/surefire-reports/testng-results.xml'
-    }
-}
-    
+            steps {
+                publishTestNGResults testResultsPattern: '**/target/surefire-reports/testng-results.xml'
+            }
+        }
+
+    }  // ✅ THIS WAS MISSING (closing stages)
+
     post {
         always {
             echo 'Cleaning up...'
@@ -65,6 +68,5 @@ pipeline {
         failure {
             echo 'Tests Failed!'
         }
-    }
     }
 }
