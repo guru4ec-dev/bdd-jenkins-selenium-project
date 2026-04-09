@@ -3,7 +3,6 @@
 <suite name="Selenium Test Suite" verbose="2">
     <test name="Automation Tests">
         <classes>
-            <class name="com.automation.tests.BaseTest"/>
             <class name="com.automation.tests.LoginLogoutTest"/>
         </classes>
     </test>
