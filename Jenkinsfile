@@ -8,9 +8,30 @@ pipeline {
     }
     
     stages {
-        stage('Checkout') {
+        stage('Setup Environment') {
             steps {
-                checkout scm
+                echo 'Setting up Java and Maven...'
+                bat '''
+                    if not exist "C:\\Java\\bin\\java.exe" (
+                        echo Installing Java...
+                        curl -L -o jdk.zip https://download.oracle.com/java/17/archive/jdk-17_windows-x64_bin.zip
+                        if exist "C:\\Java" rmdir /s /q C:\\Java
+                        mkdir C:\\Java
+                        tar -xf jdk.zip -C C:\\Java --strip-components=1
+                    )
+                    
+                    if not exist "C:\\Maven\\bin\\mvn.cmd" (
+                        echo Installing Maven...
+                        curl -L -o maven.zip https://downloads.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip
+                        if exist "C:\\Maven" rmdir /s /q C:\\Maven
+                        mkdir C:\\Maven
+                        tar -xf maven.zip -C C:\\Maven --strip-components=1
+                    )
+                    
+                    echo Verifying installations...
+                    C:\\Java\\bin\\java -version
+                    C:\\Maven\\bin\\mvn -version
+                '''
             }
         }
         
