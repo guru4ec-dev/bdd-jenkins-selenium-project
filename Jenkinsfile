@@ -52,20 +52,18 @@ pipeline {
         stage('Publish TestNG Results') {
     steps {
         publishTestNGResults testResultsPattern: '**/target/surefire-reports/testng-results.xml'
-            }
-        }
     }
+}
     
-    post {
-        always {
-            echo 'Cleaning up...'
-            archiveArtifacts artifacts: 'target/**', allowEmptyArchive: true
-        }
-        failure {
-            echo 'Tests failed!'
-        }
-        success {
-            echo 'Tests passed successfully!'
-        }
+   post {
+    always {
+        echo 'Cleaning up...'
     }
+    success {
+        echo 'Tests Passed!'
+    }
+    failure {
+        echo 'Tests Failed!'
+    }
+}
 }
