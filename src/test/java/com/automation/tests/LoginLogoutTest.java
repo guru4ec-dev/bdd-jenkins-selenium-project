@@ -8,18 +8,30 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class LoginLogoutTest {
 
     WebDriver driver;
 
     @BeforeMethod
-    public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://practicetestautomation.com/practice-test-login/");
+public void setUp() {
+    WebDriverManager.chromedriver().setup();
+
+    String headless = System.getProperty("headless"); // read from Jenkins/Maven
+
+    ChromeOptions options = new ChromeOptions();
+
+    if ("true".equalsIgnoreCase(headless)) {
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
     }
+
+    driver = new ChromeDriver(options);
+    driver.manage().window().maximize();
+    driver.get("https://practicetestautomation.com/practice-test-login/");
+}
 
     @Test
     public void testLoginAndLogout() {

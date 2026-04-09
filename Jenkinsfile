@@ -45,7 +45,7 @@ pipeline {
         stage('Run Selenium Tests') {
             steps {
                 echo 'Running Selenium tests...'
-                bat 'C:\\Maven\\bin\\mvn test'
+                bat 'C:\\Maven\\bin\\mvn clean test -Dheadless=true'
             }
         }
         
