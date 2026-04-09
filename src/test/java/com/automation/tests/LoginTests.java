@@ -1,5 +1,22 @@
 package com.automation.tests;
 
+// Selenium imports
+
+import org.openqa.selenium.chrome.ChromeOptions;
+
+// TestNG imports
+import org.testng.annotations.*;
+
+// Java utility imports
+import java.util.List;
+
+// Network imports (for link validation)
+import java.net.URL;
+import java.net.HttpURLConnection;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -9,44 +26,53 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class LoginTests {
-    private WebDriver driver;
+    WebDriver driver;
 
     @BeforeMethod
     public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
         driver.get("https://example.com/login");
     }
 
     @Test
-    public void testValidLogin() {
-        // Simulate valid login steps here; this should include entering username and password and clicking login
-        // Example:
-        // WebElement usernameField = driver.findElement(By.id("username"));
-        // usernameField.sendKeys("validUser");
-        // WebElement passwordField = driver.findElement(By.id("password"));
-        // passwordField.sendKeys("validPassword");
-        // driver.findElement(By.id("loginButton")).click();
+    public void validateAllLinks() {
+        List<WebElement> links = driver.findElements(By.tagName("a"));
 
-        // Assert that login was successful
-        // String expectedTitle = "Dashboard";
-        // String actualTitle = driver.getTitle();
-        // Assert.assertEquals(actualTitle, expectedTitle);
+        System.out.println("Total links found: " + links.size());
+
+        for (WebElement link : links) {
+            String linkText = link.getText();
+            String url = link.getAttribute("href");
+
+            // Skip empty or null links
+            if (url == null || url.isEmpty()) {
+                System.out.println("Skipping empty link: " + linkText);
+                continue;
+            }
+
+            verifyLink(url, linkText);
+        }
     }
 
-    @Test
-    public void testInvalidLogin() {
-        // Simulate invalid login steps here
-        // Example:
-        // WebElement usernameField = driver.findElement(By.id("username"));
-        // usernameField.sendKeys("invalidUser");
-        // WebElement passwordField = driver.findElement(By.id("password"));
-        // passwordField.sendKeys("invalidPassword");
-        // driver.findElement(By.id("loginButton")).click();
+    public void verifyLink(String urlString, String linkText) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.connect();
 
-        // Assert that error message is displayed
-        // WebElement errorMessage = driver.findElement(By.id("errorMessage"));
-        // Assert.assertTrue(errorMessage.isDisplayed());
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode >= 200 && responseCode < 400) {
+                System.out.println("✅ VALID: " + linkText + " -> " + urlString);
+            } else {
+                System.out.println("❌ BROKEN: " + linkText + " -> " + urlString + " | Code: " + responseCode);
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ ERROR: " + linkText + " -> " + urlString);
+        }
     }
 
     @AfterMethod
@@ -55,4 +81,5 @@ public class LoginTests {
             driver.quit();
         }
     }
+
 }
