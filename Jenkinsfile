@@ -55,15 +55,16 @@ pipeline {
     }
 }
     
-   post {
-    always {
-        echo 'Cleaning up...'
+    post {
+        always {
+            echo 'Cleaning up...'
+        }
+        success {
+            echo 'Tests Passed!'
+        }
+        failure {
+            echo 'Tests Failed!'
+        }
     }
-    success {
-        echo 'Tests Passed!'
     }
-    failure {
-        echo 'Tests Failed!'
-    }
-}
 }
