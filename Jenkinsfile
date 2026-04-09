@@ -39,7 +39,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building project...'
-                bat 'C:\\Maven\\bin\\mvn clean install'
+                bat 'C:\\Maven\\bin\\mvn clean install -DskipTests'
             }
         }
         
@@ -50,10 +50,10 @@ pipeline {
             }
         }
         
-        stage('Publish TestNG Results') {
+        stage('Publish Test Results') {
             steps {
-                publishTestNGResults testResultsPattern: '**/target/surefire-reports/testng-results.xml'
-            }
+                junit '**/target/surefire-reports/*.xml'
+                }
         }
 
     }  // ✅ THIS WAS MISSING (closing stages)
