@@ -50,12 +50,22 @@ pipeline {
             }
         }
 
+        stage('Cucumber Report') {
+            steps {
+                publishHTML([
+                    reportDir: 'target',
+                    reportFiles: 'cucumber-report.html',
+                    reportName: 'Cucumber HTML Report'
+                        ])
+                }
+        }
+
         stage('Allure Report') {
             steps {
-                allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                allure results: [[path: 'target/allure-results']]
             }
         }
-        
+
         stage('Publish Test Results') {
             steps {
                 junit '**/target/surefire-reports/*.xml'
