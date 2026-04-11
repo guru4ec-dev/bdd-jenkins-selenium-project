@@ -40,13 +40,15 @@ pipeline {
             steps {
                 echo 'Building project...'
                 bat 'C:\\Maven\\bin\\mvn clean install -DskipTests'
+
             }
         }
         
         stage('Run Selenium Tests') {
             steps {
                 echo 'Running Selenium tests...'
-                bat 'C:\\Maven\\bin\\mvn clean test -Dheadless=true'
+                bat "C:\\Maven\\bin\\mvn clean test -Dheadless=true -Dallure.results.directory=target/allure-results"
+
             }
         }
 
@@ -65,7 +67,11 @@ pipeline {
 
         stage('Allure Report') {
             steps {
-                allure results: [[path: 'target/allure-results']]
+                allure([
+                    tool: 'allure',
+                    includeProperties: false,
+                    results: [[path: 'target/allure-results']]
+                ])
             }
         }
 

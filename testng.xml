@@ -4,6 +4,7 @@
     <test name="Automation Tests">
         <classes>
             <class name="com.automation.tests.LoginLogoutTest"/>
+            <class name="com.automation.runner.TestRunner"/>
         </classes>
     </test>
 </suite>
