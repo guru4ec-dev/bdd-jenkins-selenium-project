@@ -49,6 +49,12 @@ pipeline {
                 bat 'C:\\Maven\\bin\\mvn clean test -Dheadless=true'
             }
         }
+
+        stage('Allure Report') {
+            steps {
+                allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+            }
+        }
         
         stage('Publish Test Results') {
             steps {
