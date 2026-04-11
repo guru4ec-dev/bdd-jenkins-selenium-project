@@ -74,6 +74,11 @@ pipeline {
                 ])
             }
         }
+        stage('Check Allure CLI') {
+                steps {
+                    bat 'C:\\Allure\\allure-2.39.0\\bin\\allure.bat --version'
+                }
+        }   
 
         stage('Publish Test Results') {
             steps {
