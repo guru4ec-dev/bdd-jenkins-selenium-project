@@ -65,15 +65,14 @@ pipeline {
                 }
         }
 
-        stage('Allure Report') {
-            steps {
-                allure([
-                    tool: 'allure',
-                    includeProperties: false,
-                    results: [[path: 'target/allure-results']]
-                ])
-            }
-        }
+       stage('Allure Report') {
+    steps {
+        allure(
+            includeProperties: false,
+            results: [[path: 'allure-results']]
+        )
+    }
+}
         stage('Check Allure CLI') {
                 steps {
                     bat 'C:\\Allure\\allure-2.39.0\\bin\\allure.bat --version'
