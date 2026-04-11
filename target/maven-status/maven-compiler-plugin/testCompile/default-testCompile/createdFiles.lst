@@ -1,3 +1,3 @@
-com\automation\runners\RunnerTest.class
 com\automation\tests\LoginLogoutTest.class
+com\automation\runner\TestRunner.class
 com\automation\stepdefinitions\LoginSteps.class

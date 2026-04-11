@@ -1,4 +1,4 @@
-package com.automation.runners;
+package com.automation.runner;
 
 import org.testng.annotations.Test;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
@@ -16,7 +16,7 @@ import io.cucumber.testng.CucumberOptions;
 )
 
 @Test
-public class RunnerTest extends AbstractTestNGCucumberTests {
+public class TestRunner extends AbstractTestNGCucumberTests {
 
     @Test
     public void runCucumber() {
