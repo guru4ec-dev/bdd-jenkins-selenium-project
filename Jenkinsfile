@@ -52,11 +52,14 @@ pipeline {
 
         stage('Cucumber Report') {
             steps {
-                publishHTML([
+                    publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
                     reportDir: 'target',
                     reportFiles: 'cucumber-report.html',
                     reportName: 'Cucumber HTML Report'
-                        ])
+                    ])
                 }
         }
 
