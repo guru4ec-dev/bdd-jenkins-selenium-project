@@ -66,13 +66,26 @@ pipeline {
         }
 
        stage('Allure Report') {
-    steps {
-        allure(
-            includeProperties: false,
-            results: [[path: 'target/allure-results']]
-        )
-    }
-}
+            steps {
+                allure(
+                    includeProperties: false,
+                    results: [[path: 'target/allure-results']]
+                )
+            }
+        }
+
+        stage('Zip Allure Report') {
+            steps {
+                bat 'powershell Compress-Archive -Path allure-report -DestinationPath allure-report.zip'
+            }
+        }
+
+        stage('Archive Report') {
+            steps {
+                archiveArtifacts artifacts: 'allure-report.zip', allowEmptyArchive: false
+            }
+        }
+
         stage('Check Allure CLI') {
                 steps {
                     bat 'C:\\Allure\\allure-2.39.0\\bin\\allure.bat --version'
@@ -89,13 +102,30 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up...'
-        }
-        success {
-            echo 'Tests Passed!'
-        }
-        failure {
-            echo 'Tests Failed!'
+            emailext(
+                subject: "Test Report [${currentBuild.result}] - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    <html>
+                    <body>
+                        <h2>Jenkins Allure Test Report</h2>
+                        <table border="1" cellpadding="5">
+                            <tr><td><b>Job:</b></td><td>${env.JOB_NAME}</td></tr>
+                            <tr><td><b>Build:</b></td><td>#${env.BUILD_NUMBER}</td></tr>
+                            <tr><td><b>Status:</b></td><td>${currentBuild.result}</td></tr>
+                            <tr><td><b>Duration:</b></td><td>${currentBuild.durationString}</td></tr>
+                        </table>
+                        <br/>
+                        <p>📎 Allure HTML report is attached as ZIP.</p>
+                        <p>Extract and open <b>index.html</b> in a browser to view.</p>
+                        <br/>
+                        <a href="${env.BUILD_URL}allure">View Online Allure Report</a>
+                    </body>
+                    </html>
+                """,
+                mimeType: 'text/html',
+                to: 'guru4ec@gmail.com',
+                attachmentsPattern: 'allure-report.zip'
+            )
         }
     }
 }
