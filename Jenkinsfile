@@ -39,31 +39,26 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building project...'
-                bat 'C:\\Maven\\bin\\mvn clean install -DskipTests'
-
+                bat 'mvn clean install -DskipTests'
             }
         }
 
-        stages {
+        stage('Parallel Cross Browser Tests') {
+            parallel {
 
-            stage('Parallel Cross Browser Tests') {
-                parallel {
-
-                    stage('Chrome Tests') {
-                        steps {
-                            bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
-                        }
+                stage('Chrome Tests') {
+                    steps {
+                        bat 'mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
                     }
-
-                    stage('Firefox Tests') {
-                        steps {
-                            bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
-                        }
-                    }
-
                 }
-            }
 
+                stage('Firefox Tests') {
+                    steps {
+                        bat 'mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
+                    }
+                }
+
+            }
         }
 
         stage('Cucumber Report') {
