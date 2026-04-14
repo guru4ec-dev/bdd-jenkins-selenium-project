@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.testng.ITestContext;
 
 import java.net.URL;
 
@@ -19,12 +18,17 @@ public class Hooks {
     }
 
     @Before
-public void setUp() throws Exception {
-           String browser = System.getProperty("browser");
-           if (browser == null) browser = "chrome";
-           String headless = System.getProperty("headless", "true");
+    public void setUp() throws Exception {
+                    
+        String headless = System.getProperty("headless", "true");
+        String browser = System.getProperty("browser");
+        if (browser == null) browser = "chrome";
+
+        System.out.println("Running on browser: " + browser);
+        System.out.println("Headless mode: " + headless);
 
         if (browser.equalsIgnoreCase("firefox")) {
+
 
             FirefoxOptions options = new FirefoxOptions();
 

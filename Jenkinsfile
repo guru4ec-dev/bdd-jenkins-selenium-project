@@ -48,13 +48,13 @@ pipeline {
 
                 stage('Chrome Tests') {
                     steps {
-                        bat 'mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
+                        bat 'mvn clean test -Dbrowser=chrome -DforkCount=1 -Dheadless=true -Dallure.results.directory=target/allure-results'
                     }
                 }
 
                 stage('Firefox Tests') {
                     steps {
-                        bat 'mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
+                        bat 'mvn clean test -Dbrowser=firefox -DforkCount=1 -Dheadless=true -Dallure.results.directory=target/allure-results'
                     }
                 }
 
