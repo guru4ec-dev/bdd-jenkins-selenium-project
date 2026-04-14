@@ -43,25 +43,27 @@ pipeline {
 
             }
         }
-        
-        stage('Run Selenium Tests') {
-            steps {
-                echo 'Running Selenium tests...'
-                bat "C:\\Maven\\bin\\mvn clean test -Dheadless=true -Dallure.results.directory=target/allure-results"
 
-            }
-        }
-        parallel {
-            stage('Chrome') {
-                steps {
-                    bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
+        stages {
+
+            stage('Parallel Cross Browser Tests') {
+                parallel {
+
+                    stage('Chrome Tests') {
+                        steps {
+                            bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
+                        }
+                    }
+
+                    stage('Firefox Tests') {
+                        steps {
+                            bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
+                        }
+                    }
+
                 }
             }
-            stage('Firefox') {
-                steps {
-                    bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
-                }
-            }
+
         }
 
         stage('Cucumber Report') {
