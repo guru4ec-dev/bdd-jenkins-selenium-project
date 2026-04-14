@@ -1,3 +1,4 @@
-com\automation\tests\LoginLogoutTest.class
-com\automation\runner\TestRunner.class
+com\automation\utils\DriverFactory.class
+com\automation\hooks\Hooks.class
+com\automation\runners\TestRunner.class
 com\automation\stepdefinitions\LoginSteps.class

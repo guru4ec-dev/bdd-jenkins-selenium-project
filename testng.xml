@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Selenium Test Suite" verbose="2">
-    
-     <test name="TestNG Tests">
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="2">
+
+    <test name="Chrome Tests">
+        <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="com.automation.tests.LoginLogoutTest"/>
+            <class name="com.automation.runners.TestRunner"/>
         </classes>
     </test>
 
-    <test name="Cucumber Tests">
+    <test name="Firefox Tests">
+        <parameter name="browser" value="firefox"/>
         <classes>
-            <class name="com.automation.runner.TestRunner"/>
+            <class name="com.automation.runners.TestRunner"/>
         </classes>
     </test>
+
 </suite>

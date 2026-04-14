@@ -51,6 +51,18 @@ pipeline {
 
             }
         }
+        parallel {
+            stage('Chrome') {
+                steps {
+                    bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=chrome -Dheadless=true -Dallure.results.directory=target/allure-results'
+                }
+            }
+            stage('Firefox') {
+                steps {
+                    bat 'C:\\Maven\\bin\\mvn clean test -Dbrowser=firefox -Dheadless=true -Dallure.results.directory=target/allure-results'
+                }
+            }
+        }
 
         stage('Cucumber Report') {
             steps {
@@ -115,7 +127,7 @@ pipeline {
                             <tr><td><b>Duration:</b></td><td>${currentBuild.durationString}</td></tr>
                         </table>
                         <br/>
-                        <p>📎 Allure HTML report is attached as ZIP.</p>
+                        <p>Allure HTML report is attached as ZIP.</p>
                         <p>Extract and open <b>index.html</b> in a browser to view.</p>
                         <br/>
                         <a href="${env.BUILD_URL}allure">View Online Allure Report</a>

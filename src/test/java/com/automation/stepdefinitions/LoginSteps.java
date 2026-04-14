@@ -4,9 +4,11 @@ import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import com.automation.hooks.Hooks;
+
 public class LoginSteps {
 
-    WebDriver driver;
+WebDriver driver = Hooks.getDriver();
 
     @Given("user is on login page")
     public void openLoginPage() {
