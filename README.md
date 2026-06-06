@@ -1,27 +1,26 @@
-# Selenium Grid Framework
+# BDD Jenkins Selenium Project
 
-> **Enterprise-grade test automation — zero local setup, runs entirely in CI/CD.**
+> **Local and Jenkins-based UI functional test automation with BDD, Allure, and Cucumber reporting.**
 > Built by [Guruvaiya Muthukaruppan](https://linkedin.com/in/guruvaiya-m) — Automation Architect with 19+ years delivering QA frameworks for Fortune 500 firms.
 
 ![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square)
 ![Selenium](https://img.shields.io/badge/Selenium-4-green?style=flat-square)
 ![Cucumber](https://img.shields.io/badge/Cucumber-BDD-brightgreen?style=flat-square)
-![Docker](https://img.shields.io/badge/Docker-Grid-blue?style=flat-square)
-![CI](https://img.shields.io/badge/CI-GitHub_Actions-black?style=flat-square)
+![Jenkins](https://img.shields.io/badge/CI-Jenkins-red?style=flat-square)
+![Allure](https://img.shields.io/badge/Reports-Allure-yellow?style=flat-square)
 
 ---
 
-## What this framework solves
+## What this framework demonstrates
 
-Most Selenium Grid setups require local browser installation, manual Grid configuration, and environment-specific setup steps — creating flaky runs and slow onboarding.
+A traditional, installation-based Selenium automation framework integrated with Jenkins CI/CD — the setup most commonly found in enterprise environments today.
 
-This framework eliminates all of that:
+Unlike containerised approaches, this framework reflects real-world constraints where:
 
-- **Zero local installation** — only Git required; Docker handles everything else
-- **Push-to-run CI/CD** — GitHub Actions triggers full cross-browser regression on every commit
-- **Parallel Chrome + Firefox** — simultaneous execution cuts regression runtime significantly
-- **Flake-resistant** — session retry logic (5 × 10s) and Docker healthcheck sequencing prevent race conditions
-- **Business-readable tests** — Cucumber BDD feature files authored without writing code
+- Teams run tests on dedicated Jenkins agents with pre-installed browsers
+- Allure and Cucumber reports are published directly from the Jenkins pipeline
+- Setup scripts (`setup.sh` / `setup.bat`) automate environment preparation on any machine
+- No Docker or Grid required — straightforward, portable across Jenkins agents and local machines
 
 ---
 
@@ -29,101 +28,111 @@ This framework eliminates all of that:
 
 | Layer | Technology | Why |
 |---|---|---|
-| Browser automation | Java 17 + Selenium 4 | Industry standard, thread-safe WebDriver |
-| BDD scenarios | Cucumber 7 | Business-readable; no-code test authoring for BAs |
-| Execution control | TestNG | Parallel execution and suite management |
-| Grid infrastructure | Docker + Selenium Grid 4 | Portable, containerised, zero-install |
-| CI/CD pipeline | GitHub Actions | Runs on every push; artifacts auto-published |
-| Test data | Apache POI (Excel) | Data-driven — one sheet per feature |
-| Reporting | Masterthought | Rich HTML reports with screenshots |
+| Browser automation | Java + Selenium WebDriver 4 | Industry standard; WebDriverManager handles driver binaries |
+| BDD scenarios | Cucumber (BDD) | Business-readable test scenarios |
+| Execution control | TestNG | Suite management and parallel configuration |
+| CI/CD pipeline | Jenkins + Jenkinsfile | Pipeline-as-code; runs on push or scheduled trigger |
+| Reporting | Allure + Cucumber HTML | Rich visual reports with step-level detail |
+| Build tool | Maven | Dependency management and test execution |
 
 ---
 
-## Architecture
+## How it differs from the portable Grid framework
 
-```
-GitHub Actions (CI/CD trigger on push)
-        ↓
-Docker Compose
-        ↓
-┌─────────────────────────┐    ┌─────────────────────────┐
-│  chrome-tests container  │    │  firefox-tests container │
-│  mvn verify -Dbrowser=  │    │  mvn verify -Dbrowser=  │
-│  chrome                  │    │  firefox                 │
-│  TestNG + Cucumber        │    │  TestNG + Cucumber       │
-│  Hooks → DriverManager   │    │  Hooks → DriverManager   │
-│  Page Objects + Steps    │    │  Page Objects + Steps    │
-└──────────┬──────────────┘    └──────────┬───────────────┘
-           └──────────────┬───────────────┘
-                          ↓
-               Selenium Grid Hub (:4444)
-               ├── Chrome Node (4.21.0)
-               └── Firefox Node (4.21.0)
-```
-
-**Layer responsibilities:**
-
-| Layer | Responsibility |
-|---|---|
-| `feature` files | What to test — business language readable by BA/QA |
-| `Steps` classes | How to test — reads Excel data, calls Page methods |
-| `Page` classes | Page actions — open, login, getFlashMessage |
-| `BasePage` | Reusable Selenium keywords — type, click, getText, isDisplayed |
-| `locators.properties` | All element locators centralised in one place |
-| `testdata.xlsx` | All test data — one sheet per feature |
+| Feature | This repo | [Portable Grid Framework](https://github.com/guru4ec-dev/portable-selenium-grid-framework) |
+|---|---|---|
+| Local setup required | Yes — browser + Java + Maven | No — Docker only |
+| Grid / parallel browsers | No | Yes — Chrome + Firefox simultaneously |
+| CI/CD | Jenkins (Jenkinsfile) | GitHub Actions |
+| Reporting | Allure + Cucumber HTML | Masterthought HTML |
+| Best for | Jenkins-based enterprise teams | Zero-install cloud CI environments |
 
 ---
 
 ## Project structure
 
 ```
-src/
-└── test/
-    ├── java/com/automation/
-    │   ├── core/
-    │   │   └── DriverManager.java       ← ThreadLocal WebDriver + retry logic
-    │   ├── hooks/
-    │   │   └── Hooks.java               ← Before/After + configurable screenshot capture
-    │   ├── pages/
-    │   │   └── LoginPage.java           ← Page Object Model (PageFactory)
-    │   ├── runners/
-    │   │   └── TestRunner.java          ← Cucumber + TestNG entry point
-    │   ├── steps/
-    │   │   └── LoginSteps.java          ← BDD step definitions
-    │   └── utils/
-    │       ├── ExcelUtils.java          ← Excel test data reader (Apache POI)
-    │       └── ObjectRepository.java    ← Loads locators from locators.properties
-    └── resources/
-        ├── features/
-        │   └── login.feature            ← Cucumber BDD scenarios
-        ├── locators.properties          ← All element locators in one place
-        └── testdata/
-            └── testdata.xlsx            ← Test data (one sheet per feature)
+├── src/
+│   └── test/
+│       ├── java/com/automation/
+│       │   ├── pages/          ← Page Object Model classes
+│       │   ├── steps/          ← Cucumber BDD step definitions
+│       │   ├── hooks/          ← Before/After hooks + screenshot capture
+│       │   ├── runners/        ← TestNG + Cucumber runner configuration
+│       │   └── utils/          ← Utilities — WebDriverManager, config reader
+│       └── resources/
+│           ├── features/       ← Cucumber BDD feature files
+│           └── testdata/       ← Test data files
+├── jenkins-selenium-project/   ← Jenkins job configuration
+├── allure-results/             ← Allure raw output (auto-generated)
+├── Jenkinsfile                 ← Pipeline-as-code definition
+├── testng.xml                  ← TestNG suite configuration
+├── pom.xml                     ← Maven dependencies and plugin config
+├── setup.sh                    ← Automated environment setup (Linux/Mac)
+└── setup.bat                   ← Automated environment setup (Windows)
 ```
+
+---
+
+## Setup and running tests
+
+### Prerequisites
+
+- Java 17+
+- Maven 3.8+
+- Chrome or Firefox browser installed
+- Jenkins (for CI/CD pipeline execution)
+
+### Automated setup
+
+```bash
+# Linux / Mac
+chmod +x setup.sh && ./setup.sh
+
+# Windows
+setup.bat
+```
+
+### Run tests locally
+
+```bash
+mvn clean verify
+```
+
+### Run via Jenkins
+
+1. Create a new Jenkins Pipeline job
+2. Point it to this repository
+3. Jenkins will auto-detect the `Jenkinsfile` and execute the pipeline
+4. Allure and Cucumber HTML reports are published as build artifacts
+
+---
+
+## CI/CD pipeline (Jenkinsfile)
+
+The `Jenkinsfile` defines the full pipeline-as-code:
+
+```
+Checkout → Build → Run Tests → Publish Allure Report → Publish Cucumber Report
+```
+
+- Allure results auto-published to Jenkins Allure plugin
+- Cucumber HTML report available as a build artifact on every run
+- Pipeline triggers on every commit or on a scheduled basis
 
 ---
 
 ## Key engineering decisions
 
-**ThreadLocal WebDriver** — ensures thread safety during parallel execution; no shared state between test threads.
+**WebDriverManager** — eliminates manual ChromeDriver/GeckoDriver version management; automatically downloads the correct driver binary at runtime.
 
-**Object Repository pattern** — all locators externalised to `locators.properties`; zero code changes needed when UI elements change.
+**Page Object Model** — UI interactions encapsulated in page classes; step definitions stay clean and readable; locator changes require updates in one place only.
 
-**Configurable screenshot modes** — `failure` / `step-all` / `step-failed` via `-Dscreenshot.mode`; balances debug visibility vs report size.
+**Dual reporting (Allure + Cucumber HTML)** — Allure provides step-level visual breakdown with screenshots; Cucumber HTML gives business-readable scenario pass/fail summary. Both published automatically from Jenkins.
 
-**Docker healthcheck sequencing** — Grid Hub must be healthy before nodes register; nodes must be ready before tests execute. Prevents the most common source of CI flakiness.
+**Setup scripts (`setup.sh` / `setup.bat`)** — one-command environment preparation for new team members on both Linux/Mac and Windows; reduces onboarding friction on Jenkins agent machines.
 
-**Session retry logic** — 5 retries × 10s intervals for Grid connections; handles transient startup delays without failing the suite.
-
----
-
-## Running tests
-
-| Guide | Contents |
-|---|---|
-| [Running Tests](docs/RUNNING-TESTS.md) | GitHub Actions, Docker local, screenshot modes, parallel scaling |
-| [Developer Guide](docs/DEVELOPER-GUIDE.md) | Adding features — 5-step walkthrough, scaffold script, locators, test data |
-| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common errors, Grid setup, Docker logs |
+**Jenkinsfile (pipeline-as-code)** — pipeline definition lives in the repo, not in Jenkins UI; version-controlled, reviewable, and portable across Jenkins instances.
 
 ---
 
