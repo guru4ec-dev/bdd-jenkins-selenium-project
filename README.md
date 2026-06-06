@@ -1,4 +1,4 @@
-# Portable Selenium Grid Framework
+# Selenium Grid Framework
 
 > **Enterprise-grade test automation — zero local setup, runs entirely in CI/CD.**
 > Built by [Guruvaiya Muthukaruppan](https://linkedin.com/in/guruvaiya-m) — Automation Architect with 19+ years delivering QA frameworks for Fortune 500 firms.
