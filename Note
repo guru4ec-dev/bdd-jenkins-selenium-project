@@ -2,7 +2,16 @@
   in one place. The Home page displays contract tiles that navigate to a Contract Listing page (with contract management and documents), an Employee page (to view, add, and remove employees on a contract), and
   an Account page showing the logged-in customer's account details.
 
+ECP (Espace Client Particulier) is Allianz France's customer-facing web portal for individual (retail) customers, allowing them to view and manage their insurance contracts, documents, notifications, and
+  personal data online.
+
 CIAM (Customer Identity & Access Management) — Espace Client Entreprise is a security and identity overhaul for XXX's Corporate Customer Area (ECE Ulysse), introducing strong dual authentication via a
   group-approved CIAM provider. It extends access management so corporate customers can grant, monitor, and revoke third-party access (e.g., accountants, HR) to all or part of their portal and contracts. The
   scope covers customer, third-party, and assistance/agent journeys — including self-service account activation, password recovery, security notifications, and support workflows — across all corporate products
   and customers using ECE Ulysse.
+
+
+ XXX Customer Portals (ECE, CIAM, ECP) — Worked across three interconnected XXX applications: Espace Client Entreprise, a 360° multi-domain portal for corporate customers to manage
+  contracts, employees, and accounts; CIAM, a security initiative implementing strong dual authentication and third-party access management for the corporate portal; and ECP (Espace Client Particulier),
+  Allianz France's retail customer portal for managing contracts, documents, and personal data. As Automation Architect, designed and built the test automation framework (Selenium, Playwright) integrated into
+  CI/CD pipelines, ensuring quality and regression coverage across all three applications.
