@@ -1,3 +1,8 @@
  Espace Client Entreprise is XXX's corporate customer portal for companies and entrepreneurs to manage all their XXX insurance contracts (Health & Protection, Retirement, Fleet, etc.)
   in one place. The Home page displays contract tiles that navigate to a Contract Listing page (with contract management and documents), an Employee page (to view, add, and remove employees on a contract), and
   an Account page showing the logged-in customer's account details.
+
+CIAM (Customer Identity & Access Management) — Espace Client Entreprise is a security and identity overhaul for XXX's Corporate Customer Area (ECE Ulysse), introducing strong dual authentication via a
+  group-approved CIAM provider. It extends access management so corporate customers can grant, monitor, and revoke third-party access (e.g., accountants, HR) to all or part of their portal and contracts. The
+  scope covers customer, third-party, and assistance/agent journeys — including self-service account activation, password recovery, security notifications, and support workflows — across all corporate products
+  and customers using ECE Ulysse.
