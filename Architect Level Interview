@@ -1,3 +1,64 @@
+Here's the condensed cheat sheet — just trigger phrases to jog your memory fast, mapped to the same questions.
+
+  1. Architecture & Strategy
+
+  - Framework from scratch: decouple core/logic/page-objects → tool abstraction → BDD describes behavior, steps call services →
+  parallel-first design → observability (Allure, screenshots, logs) built in early
+  - Selenium vs Playwright: Playwright = speed, auto-wait, network mocking, multi-context. Selenium = ecosystem maturity, legacy
+  browser/device farm support. Decision = greenfield+modern→Playwright; existing investment/legacy needs→Selenium
+  - Hybrid framework: shared core (config/log/report) + separate UI/API/DB modules → service layer, never call driver/RestAssured
+  directly from tests
+  - Tool-agnostic: driver-abstraction interface + adapter pattern (SeleniumAdapter/PlaywrightAdapter) injected via factory
+  - Test data: self-contained per test, externalized config per env, API-based setup/teardown, builder pattern over static fixtures
+
+  2. Technical Depth
+
+  - Grid 4 scaling: Router/Distributor/SessionMap/Node → Docker/K8s → issues: session leaks (cleanup hooks), node flakiness
+  (health-check retries), version drift (pin versions)
+  - Flaky tests: retries = safety net only (max 1) → categorize root cause (sync/data/env/app bug) → flaky dashboard → quarantine +
+  owner SLA
+  - BDD sprawl: shared reviewed step library, glossary, parameterized steps, thin steps calling services
+  - REST Assured at scale: RequestSpecBuilder per service, POJO+schema validation, cached token/auth util, fluent builder for chained
+  calls
+  - Sync/waits: Playwright auto-wait vs Selenium explicit WebDriverWait/ExpectedConditions → never Thread.sleep()
+
+  3. CI/CD & DevOps
+
+  - GH Actions vs Jenkins: matrix strategy + composite actions vs declarative pipeline + shared libraries — same concept, different
+  syntax; artifact + Slack/Teams notify both
+  - PR vs nightly vs pre-release: PR=fast smoke (<10min) → nightly=full regression → pre-release=full regression+exploratory+security
+  gate
+  - Reporting/triage: auto-classify failures (assertion/infra/timeout) → red-build-owner rotation with SLA
+  - Containerize: pin browser/driver versions in Docker image → same run locally and CI, kills "works on my machine"
+
+  4. Leadership & Influence
+
+  - Driving adoption: lead with data + low-friction win in area devs already feel pain, not mandates
+  - Wrong decision in hindsight: over-engineered plugin architecture for hypothetical flexibility never used → simplified, abstract
+  only where change is likely
+  - Automate-everything pressure: frame as ROI/payback backlog — high-value (repetitive/high-risk/stable) vs low-value (volatile UI,
+  one-off exploratory)
+  - Mentoring: design review before code review, rotate ownership of core framework components
+
+  5. Scenario-Based
+
+  - Fintech, 40+ microservices, 15 SDETs, 3 TZ: test pyramid — heavy API/contract testing, thin UI for critical journeys, shared core
+  for mobile (Appium) → domain ownership + architecture guild → compliance/security gate + synthetic data only → follow-the-sun
+  triage rotation
+  - 6hr suite → 45min: profile bottleneck → parallelize (Grid/containers) → risk-based test selection (tag by criticality) → push UI
+  tests down to API/unit level → kill flaky/redundant tests → prove with before/after coverage metrics
+
+  6. Behavioral
+
+  - Biggest failure: tight coupling to Selenium WebElement → forced full rewrite for Playwright → now: abstraction layer from day
+  one, even without immediate need
+  - New tool evaluation: time-boxed spike, 2-3 real scenarios in both tools, measure authoring time/stability/CI effort vs
+  migration+ramp-up cost — data over hype
+
+  ---Golden thread to repeat across answers: abstraction where change is likely, ROI-driven prioritization, data over opinion, and
+  treating flakiness/CI speed as engineering problems with root causes — not folklore to work around. That framing alone signals
+  "architect," not "senior tester."
+-------------------------------------------------------------------------------------------------------------------------
 Here are strong, ready-to-rehearse answers for each question — written in first person so you can adapt them directly. I've kept
   them structured (framework/trade-off/example) so they're easy to recall under pressure.
 
